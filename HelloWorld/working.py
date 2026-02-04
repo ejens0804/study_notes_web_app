@@ -161,7 +161,7 @@ def home():
     <body>
         <div class="container">
             <h1>🚀 FastAPI Dashboard</h1>
-            <p class="subtitle">Interactive API Demo</p>
+            <p class="subtitle">API Demo</p>
             
             <div class="card-grid">
                 <div class="card" onclick="updateCard(this)">
@@ -211,7 +211,7 @@ def home():
                 
                 loading.style.display = 'block';
                 result.textContent = '';
-                    
+
                 try {
                     const response = await fetch(endpoint);
                     const data = await response.json();
