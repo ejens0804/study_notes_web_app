@@ -1,0 +1,35 @@
+<!-- File: templates/home.html -->
+{% extends "base.html" %}
+
+{% block title %}Home - FastAPI App{% endblock %}
+
+{% block content %}
+<h1>🚀 Welcome to FastAPI</h1>
+<p class="subtitle">A modern, fast web framework for building APIs</p>
+
+<div class="card-grid">
+    <div class="card" onclick="updateCard(this)">
+        <h3>Server Status</h3>
+        <p>✅ Online</p>
+    </div>
+    <div class="card" onclick="updateCard(this)">
+        <h3>API Version</h3>
+        <p>v1.0</p>
+    </div>
+    <div class="card" onclick="updateCard(this)">
+        <h3>Total Pages</h3>
+        <p>4</p>
+    </div>
+</div>
+
+<div class="info-section">
+    <h3>Quick Start</h3>
+    <p>Navigate using the menu above to explore different sections of this application.</p>
+    <ul class="feature-list">
+        <li>Interactive API demonstrations</li>
+        <li>Real-time server information</li>
+        <li>Easy-to-use contact form</li>
+        <li>Comprehensive documentation</li>
+    </ul>
+</div>
+{% endblock %}
