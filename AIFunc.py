@@ -45,4 +45,7 @@ def upload_gemini(input=None, file1=None, file2=None, file3=None):
 #alternate model arguments found at; https://ai.google.dev/gemini-api/docs/models
 #attempt to use least advanced model to save cost
 
+print(text_gemini('string input'))
 print(upload_gemini('string input', r"filepath(r ignores backslashes as escape characters) repeat as desired"))
+
+#both functions return text output
