@@ -11,6 +11,9 @@ import sys
 from google import genai #pip install google-genai
 import time
 
+with open('token.txt', 'r') as file:
+    key = file.read()
+
 app = FastAPI()
 
 # Mount static files (CSS, JS, images)
@@ -96,7 +99,7 @@ async def submit_contact(data: dict):
     
 #for text input only
 def text_gemini(input=None):
-    api_key = "AIzaSyAioGahyYx-SIwZGDaKGz3EBRqEWovZFGs"
+    api_key = key
     client = genai.Client(api_key=api_key)
     while True:
         try:
@@ -112,7 +115,7 @@ def text_gemini(input=None):
 #for text and file input WIP
 #for local files uplodading; file argument should be filepath. To add extra file capacity, add file4, file5, etc
 def upload_gemini(input=None, file1=None, file2=None, file3=None):
-    api_key = "AIzaSyAioGahyYx-SIwZGDaKGz3EBRqEWovZFGs"
+    api_key = key
     client = genai.Client(api_key=api_key)
     contents = []
     if input:

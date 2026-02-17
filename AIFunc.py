@@ -2,9 +2,12 @@ import sys
 from google import genai #pip install google-genai
 import time
 
+with open('token.txt', 'r') as file:
+    key = file.read()
+
 #for text input only
 def text_gemini(input=None):
-    api_key = "AIzaSyAioGahyYx-SIwZGDaKGz3EBRqEWovZFGs"
+    api_key = key
     client = genai.Client(api_key=api_key)
     while True:
         try:
@@ -20,7 +23,7 @@ def text_gemini(input=None):
 #for text and file input WIP
 #for local files uplodading; file argument should be filepath. To add extra file capacity, add file4, file5, etc
 def upload_gemini(input=None, file1=None, file2=None, file3=None):
-    api_key = "AIzaSyAioGahyYx-SIwZGDaKGz3EBRqEWovZFGs"
+    api_key = key
     client = genai.Client(api_key=api_key)
     contents = []
     if input:
@@ -45,4 +48,8 @@ def upload_gemini(input=None, file1=None, file2=None, file3=None):
 #alternate model arguments found at; https://ai.google.dev/gemini-api/docs/models
 #attempt to use least advanced model to save cost
 
+#example usage
+print(text_gemini('string input'))
 print(upload_gemini('string input', r"filepath(r ignores backslashes as escape characters) repeat as desired"))
+
+#both functions return text output
