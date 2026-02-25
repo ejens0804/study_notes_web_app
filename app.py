@@ -78,7 +78,7 @@ def get_status():
     }
 
 @app.get("/api/greet/{name}")
-def greet(name: str):
+def greet():
     return {
         "message": f"Hello, {name}!",
         "greeting": random.choice(["Welcome!", "Great to see you!", "How are you?"])
@@ -92,7 +92,20 @@ async def submit_contact(data: dict):
         "received_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     
+@app.post("/api/ai-query")
+async def ai_query(data: dict):
+    prompt = data.get("prompt")
+
+    if not prompt:
+        return {"response": "No input provided."}
+
+    try:
+        answer = text_gemini(prompt)
+        return {"response": answer}
+    except Exception as e:
+        return {"response": f"Error: {str(e)}"}
     
+
     
     
     
@@ -103,7 +116,7 @@ def text_gemini(input=None):
     client = genai.Client(api_key=api_key)
     while True:
         try:
-            response = client.models.generate_content(model='gemini-2.0-flash-lite', contents=input)
+            response = client.models.generate_content(model='gemini-2.0-flash-lite', contents=f"{input}. Keep your response concise enough that it can be quickly read in one to two minutes.")
             return response.text
         except Exception as e:
             if "503" in str(e) or "overloaded" in str(e):
@@ -126,7 +139,7 @@ def upload_gemini(input=None, file1=None, file2=None, file3=None):
             contents.append(uploaded)
     while True:
         try:
-            response = client.models.generate_content(model="gemini-2.0-flash-lite",contents=contents)
+            response = client.models.generate_content(model="gemini-2.5-flash",contents=contents)
             return response.text
         except Exception as e:
             if "503" in str(e) or "overloaded" in str(e):

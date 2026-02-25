@@ -25,6 +25,13 @@
     <button onclick="fetchData('/api/greet/World')">Say Hello</button>
 </div>
 
+<div class="ai-query-section">
+    <h3>Ask the AI</h3>
+    <textarea id="aiInput" rows="4" placeholder="Type your question here..."></textarea>
+    <br>
+    <button onclick="sendAIQuery()">Ask AI</button>
+</div>
+
 <div class="output" id="output">
     <h3>Output</h3>
     <p class="loading" id="loading">Loading...</p>
@@ -34,4 +41,38 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', path='/js/api.js') }}"></script>
+
+<script>
+async function sendAIQuery() {
+    const input = document.getElementById("aiInput").value;
+    const output = document.getElementById("result");
+    const loading = document.getElementById("loading");
+
+    if (!input.trim()) {
+        output.textContent = "Please enter a question.";
+        return;
+    }
+
+    loading.style.display = "block";
+    output.textContent = "";
+
+    try {
+        const response = await fetch("/api/ai-query", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ prompt: input })
+        });
+
+        const data = await response.json();
+        output.textContent = data.response;
+    } catch (error) {
+        output.textContent = "Error contacting AI.";
+    }
+
+    loading.style.display = "none";
+}
+</script>
+
 {% endblock %}
