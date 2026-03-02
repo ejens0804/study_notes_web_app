@@ -8,50 +8,51 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #f5f7fa;
     min-height: 100vh;
     padding: 20px;
 }
 
 .navbar {
     background: white;
-    border-radius: 10px;
+    border-radius: 4px;
     padding: 15px 30px;
     margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 20px;
     align-items: center;
     max-width: 900px;
     margin: 0 auto 20px auto;
+    border: 1px solid #e1e8ed;
 }
 
 .navbar a {
-    color: #667eea;
+    color: #2c3e50;
     text-decoration: none;
     padding: 8px 16px;
-    border-radius: 5px;
-    transition: background 0.3s;
+    border-radius: 3px;
+    transition: background 0.2s;
     font-weight: 500;
 }
 
 .navbar a:hover {
-    background: #f0f0f0;
+    background: #f5f7fa;
 }
 
 .navbar a.active {
-    background: #667eea;
+    background: #3498db;
     color: white;
 }
 
 .container {
     background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 40px;
     max-width: 900px;
     margin: 0 auto;
-    animation: fadeIn 0.3s;
+    border: 1px solid #e1e8ed;
 }
 
 @keyframes fadeIn {
@@ -66,13 +67,14 @@ body {
 }
 
 h1 {
-    color: #667eea;
+    color: #2c3e50;
     margin-bottom: 10px;
     font-size: 2.5em;
+    font-weight: 600;
 }
 
 .subtitle {
-    color: #666;
+    color: #7f8c8d;
     margin-bottom: 30px;
     font-size: 1.1em;
 }
@@ -85,17 +87,17 @@ h1 {
 }
 
 .card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #3498db;
     color: white;
     padding: 25px;
-    border-radius: 15px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: background 0.2s;
+    border: 1px solid #2980b9;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    background: #2980b9;
 }
 
 .card h3 {
@@ -116,36 +118,37 @@ h1 {
 }
 
 button {
-    background: #667eea;
+    background: #3498db;
     color: white;
     border: none;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-size: 1em;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.2s;
+    font-weight: 500;
 }
 
 button:hover {
-    background: #5568d3;
-    transform: scale(1.05);
+    background: #2980b9;
 }
 
 button:active {
-    transform: scale(0.95);
+    background: #21618c;
 }
 
 .output {
-    background: #f7f7f7;
-    border-radius: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
     padding: 20px;
     margin-top: 20px;
     min-height: 100px;
     font-family: 'Courier New', monospace;
+    border: 1px solid #e1e8ed;
 }
 
 .output h3 {
-    color: #667eea;
+    color: #2c3e50;
     margin-bottom: 10px;
 }
 
@@ -156,7 +159,7 @@ button:active {
 
 .loading {
     display: none;
-    color: #667eea;
+    color: #3498db;
     font-style: italic;
 }
 
@@ -167,7 +170,7 @@ button:active {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: #2c3e50;
     font-weight: 500;
 }
 
@@ -175,27 +178,28 @@ button:active {
 .form-group textarea {
     width: 100%;
     padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
     font-size: 1em;
-    transition: border-color 0.3s;
+    transition: border-color 0.2s;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #3498db;
 }
 
 .info-section {
-    background: #f7f7f7;
+    background: #ecf0f1;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 4px;
     margin-bottom: 20px;
+    border-left: 4px solid #3498db;
 }
 
 .info-section h3 {
-    color: #667eea;
+    color: #2c3e50;
     margin-bottom: 10px;
 }
 
@@ -206,7 +210,7 @@ button:active {
 
 .feature-list li {
     padding: 10px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e1e8ed;
 }
 
 .feature-list li:last-child {
@@ -215,7 +219,7 @@ button:active {
 
 .feature-list li::before {
     content: "✓ ";
-    color: #667eea;
+    color: #27ae60;
     font-weight: bold;
     margin-right: 8px;
 }
