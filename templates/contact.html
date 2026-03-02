@@ -4,7 +4,7 @@
 {% block title %}Contact - FastAPI App{% endblock %}
 
 {% block content %}
-<h1>📧 Contact Us</h1>
+<h1>Contact Us</h1>
 <p class="subtitle">Get in touch with our team</p>
 
 <div class="form-group">
@@ -31,9 +31,15 @@
 
 <div class="info-section" style="margin-top: 30px;">
     <h3>Other Ways to Reach Us</h3>
-    <p>📧 Email: support@example.com</p>
-    <p>📱 Phone: +1 (555) 123-4567</p>
-    <p>🏢 Address: 123 API Street, Dev City, DC 12345</p>
+    <p>Email: support@example.com</p>
+    <p>Phone: +1 (555) 123-4567</p>
+    <p>Address: 123 API Street, Dev City, DC 12345</p>
+</div>
+
+<div class="button-group" style="margin-top: 30px;">
+    <button onclick="window.location.href='/'">Back to Home</button>
+    <button onclick="window.location.href='/api-demo'">Try Text2Flashcards</button>
+    <button onclick="window.location.href='/about'">Text2Speech</button>
 </div>
 {% endblock %}
 

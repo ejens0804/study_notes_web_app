@@ -1,7 +1,7 @@
 <!-- File: templates/api_demo.html -->
 {% extends "base.html" %}
 
-{% block title %}API Demo - FastAPI App{% endblock %}
+{% block title %}Text2Flashcards - FastAPI App{% endblock %}
 
 {% block content %}
 <h1>Text to Speech</h1>
@@ -36,6 +36,12 @@
     <h3>Output</h3>
     <p class="loading" id="loading">Loading...</p>
     <pre id="result">Click a button to see the API response...</pre>
+</div>
+
+<div class="button-group" style="margin-top: 30px;">
+    <button onclick="window.location.href='/'">Back to Home</button>
+    <button onclick="window.location.href='/about'">Text2Speech</button>
+    <button onclick="window.location.href='/contact'">Contact</button>
 </div>
 {% endblock %}
 

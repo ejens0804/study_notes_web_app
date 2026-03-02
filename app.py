@@ -10,9 +10,15 @@ import random
 import sys
 from google import genai #pip install google-genai
 import time
+import os
 
-with open('token.txt', 'r') as file:
-    key = file.read()
+# Handle token file gracefully
+try:
+    with open('token.txt', 'r') as file:
+        key = file.read().strip()
+except FileNotFoundError:
+    key = None
+    print("Warning: token.txt not found. AI features will not work.")
 
 app = FastAPI()
 
@@ -30,20 +36,20 @@ async def home(request: Request):
         "title": "Home"
     })
 
-# Route for API demo page
+# Route for Text2Flashcards page
 @app.get("/api-demo", response_class=HTMLResponse)
 async def api_demo(request: Request):
     return templates.TemplateResponse("api_demo.html", {
         "request": request,
-        "title": "API Demo"
+        "title": "Text2Flashcards"
     })
 
-# Route for about page
+# Route for Text2Speech page
 @app.get("/about", response_class=HTMLResponse)
 async def about(request: Request):
     return templates.TemplateResponse("about.html", {
         "request": request,
-        "title": "About"
+        "title": "Text2Speech"
     })
 
 # Route for contact page
@@ -78,7 +84,7 @@ def get_status():
     }
 
 @app.get("/api/greet/{name}")
-def greet():
+def greet(name: str):
     return {
         "message": f"Hello, {name}!",
         "greeting": random.choice(["Welcome!", "Great to see you!", "How are you?"])
@@ -98,6 +104,9 @@ async def ai_query(data: dict):
 
     if not prompt:
         return {"response": "No input provided."}
+    
+    if not key:
+        return {"response": "AI service not configured. Please add your API key to token.txt file."}
 
     try:
         answer = text_gemini(prompt)
@@ -112,6 +121,8 @@ async def ai_query(data: dict):
     
 #for text input only
 def text_gemini(input=None):
+    if not key:
+        return "AI service not configured."
     api_key = key
     client = genai.Client(api_key=api_key)
     while True:

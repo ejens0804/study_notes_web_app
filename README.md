@@ -28,7 +28,7 @@ project/
 
 1. **Install dependencies:**
    ```bash
-   pip install fastapi uvicorn jinja2 python-multipart
+   pip install fastapi uvicorn jinja2 python-multipart google-genai
    ```
 
 2. **Create the directory structure:**
@@ -38,12 +38,22 @@ project/
 
 3. **Add all the files** as shown in the structure above
 
-4. **Run the application:**
+4. **Set up AI features (optional):**
+   - Create a `token.txt` file in the root directory
+   - Add your Google Gemini API key to this file
+   - If you skip this step, the app will still run but AI features won't work
+   
+   Example:
+   ```bash
+   echo "YOUR_GOOGLE_GENAI_API_KEY" > token.txt
+   ```
+
+5. **Run the application:**
    ```bash
    uvicorn app:app --reload
    ```
 
-5. **Open your browser:**
+6. **Open your browser:**
    Navigate to `http://127.0.0.1:8000`
 
 ## How It Works

@@ -24,12 +24,17 @@
 
 <div class="info-section">
     <h3>Quick Start</h3>
-    <p>Navigate using the menu above to explore different sections of this application.</p>
+    <p>Explore the different sections of this application:</p>
+    <div class="button-group" style="margin-top: 20px; margin-bottom: 20px;">
+        <button onclick="window.location.href='/api-demo'">Try Text2Flashcards</button>
+        <button onclick="window.location.href='/about'">Try Text2Speech</button>
+        <button onclick="window.location.href='/contact'">Contact Us</button>
+    </div>
     <ul class="feature-list">
-        <li>Interactive API demonstrations</li>
-        <li>Real-time server information</li>
-        <li>Easy-to-use contact form</li>
-        <li>Comprehensive documentation</li>
+        <li><a href="/api-demo" style="color: #007acc; text-decoration: none;">Text2Flashcards converter</a> - Turn your documents into interactive flashcards</li>
+        <li><a href="/about" style="color: #007acc; text-decoration: none;">Text2Speech converter</a> - Listen to your study materials with AI-powered narration</li>
+        <li><a href="/contact" style="color: #007acc; text-decoration: none;">Easy-to-use contact form</a> - Reach out to us with questions</li>
+        <li><a href="/api-demo" style="color: #007acc; text-decoration: none;">AI-powered learning tools</a> - Get intelligent summaries and assistance</li>
     </ul>
 </div>
 {% endblock %}
