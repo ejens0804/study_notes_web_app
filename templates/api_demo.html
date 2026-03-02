@@ -3,6 +3,47 @@
 
 {% block title %}Text2Flashcards - FastAPI App{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Blue Aesthetic for Text2Flashcards Page */
+    body {
+        background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
+    }
+    
+    h1 {
+        color: #2e86de;
+    }
+    
+    .card {
+        background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
+    }
+    
+    .card:hover {
+        box-shadow: 0 10px 25px rgba(46, 134, 222, 0.4);
+    }
+    
+    button {
+        background: #2e86de;
+    }
+    
+    button:hover {
+        background: #2475c7;
+    }
+    
+    .navbar a:hover {
+        background: #e6f2ff;
+    }
+    
+    .output h3 {
+        color: #2e86de;
+    }
+    
+    .ai-query-section textarea {
+        border: 2px solid #54a0ff;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Text to Speech</h1>
 <p class="subtitle">Convert text to speech</p>
@@ -41,6 +82,7 @@
 <div class="button-group" style="margin-top: 30px;">
     <button onclick="window.location.href='/'">Back to Home</button>
     <button onclick="window.location.href='/about'">Text2Speech</button>
+    <button onclick="window.location.href='/docx-summary'">Docx Summary</button>
     <button onclick="window.location.href='/contact'">Contact</button>
 </div>
 {% endblock %}

@@ -3,6 +3,43 @@
 
 {% block title %}Home - FastAPI App{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Green Aesthetic for Home Page */
+    body {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    
+    h1 {
+        color: #11998e;
+    }
+    
+    .card {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+    
+    .card:hover {
+        box-shadow: 0 10px 25px rgba(17, 153, 142, 0.4);
+    }
+    
+    button {
+        background: #11998e;
+    }
+    
+    button:hover {
+        background: #0e7f73;
+    }
+    
+    .navbar a:hover {
+        background: #e8f8f5;
+    }
+    
+    .output h3 {
+        color: #11998e;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Welcome to --Unknown Name--</h1>
 <p class="subtitle">This is a site used to help users turn documents to flashcards for easy memorization, text to speech for better understanding, document focus pull, games and more</p>
@@ -28,13 +65,14 @@
     <div class="button-group" style="margin-top: 20px; margin-bottom: 20px;">
         <button onclick="window.location.href='/api-demo'">Try Text2Flashcards</button>
         <button onclick="window.location.href='/about'">Try Text2Speech</button>
+        <button onclick="window.location.href='/docx-summary'">Try Docx Summary</button>
         <button onclick="window.location.href='/contact'">Contact Us</button>
     </div>
     <ul class="feature-list">
         <li><a href="/api-demo" style="color: #007acc; text-decoration: none;">Text2Flashcards converter</a> - Turn your documents into interactive flashcards</li>
         <li><a href="/about" style="color: #007acc; text-decoration: none;">Text2Speech converter</a> - Listen to your study materials with AI-powered narration</li>
+        <li><a href="/docx-summary" style="color: #007acc; text-decoration: none;">Docx Summary generator</a> - Get intelligent summaries of your documents</li>
         <li><a href="/contact" style="color: #007acc; text-decoration: none;">Easy-to-use contact form</a> - Reach out to us with questions</li>
-        <li><a href="/api-demo" style="color: #007acc; text-decoration: none;">AI-powered learning tools</a> - Get intelligent summaries and assistance</li>
     </ul>
 </div>
 {% endblock %}

@@ -60,6 +60,14 @@ async def contact(request: Request):
         "title": "Contact"
     })
 
+# Route for Docx Summary page
+@app.get("/docx-summary", response_class=HTMLResponse)
+async def docx_summary(request: Request):
+    return templates.TemplateResponse("docx_summary.html", {
+        "request": request,
+        "title": "Docx Summary"
+    })
+
 # API Endpoints
 @app.get("/api/time")
 def get_time():
@@ -111,6 +119,24 @@ async def ai_query(data: dict):
     try:
         answer = text_gemini(prompt)
         return {"response": answer}
+    except Exception as e:
+        return {"response": f"Error: {str(e)}"}
+
+@app.post("/api/summarize")
+async def summarize_document(data: dict):
+    text = data.get("text")
+    
+    if not text:
+        return {"response": "No text provided."}
+    
+    if not key:
+        return {"response": "AI service not configured. Please add your API key to token.txt file."}
+    
+    try:
+        # Create a summarization prompt
+        summary_prompt = f"Please provide a concise summary of the following text, highlighting the main points and key information:\n\n{text}"
+        summary = text_gemini(summary_prompt)
+        return {"summary": summary}
     except Exception as e:
         return {"response": f"Error: {str(e)}"}
     
