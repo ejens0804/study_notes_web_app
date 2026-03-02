@@ -39,7 +39,7 @@ async def home(request: Request):
 # Route for Text2Flashcards page
 @app.get("/api-demo", response_class=HTMLResponse)
 async def api_demo(request: Request):
-    return templates.TemplateResponse("api_demo.html", {
+    return templates.TemplateResponse("text2flashcards.html", {
         "request": request,
         "title": "Text2Flashcards"
     })
@@ -47,7 +47,7 @@ async def api_demo(request: Request):
 # Route for Text2Speech page
 @app.get("/about", response_class=HTMLResponse)
 async def about(request: Request):
-    return templates.TemplateResponse("about.html", {
+    return templates.TemplateResponse("text2speech.html", {
         "request": request,
         "title": "Text2Speech"
     })

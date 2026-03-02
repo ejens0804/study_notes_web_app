@@ -3,6 +3,84 @@
 
 {% block title %}Contact - FastAPI App{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Darker Green Aesthetic for Contact Page */
+    body {
+        background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
+    }
+    
+    .container {
+        background: #f0f7f4;
+    }
+    
+    h1 {
+        color: #1e5128;
+    }
+    
+    .subtitle {
+        color: #2d6a4f;
+    }
+    
+    button {
+        background: #2d6a4f;
+    }
+    
+    button:hover {
+        background: #1e5128;
+    }
+    
+    .navbar {
+        background: #f0f7f4;
+    }
+    
+    .navbar a {
+        color: #1e5128;
+    }
+    
+    .navbar a:hover {
+        background: #e3f0ea;
+    }
+    
+    .form-group label {
+        color: #1e5128;
+        font-weight: 600;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        border: 2px solid #d4e7dd;
+        background: white;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #2d6a4f;
+        outline: none;
+    }
+    
+    .info-section {
+        background: #e3f0ea;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #2d6a4f;
+    }
+    
+    .info-section h3 {
+        color: #1e5128;
+    }
+    
+    .info-section p {
+        color: #2d6a4f;
+    }
+    
+    .output {
+        background: #e3f0ea;
+        border-left: 4px solid #2d6a4f;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Contact Us</h1>
 <p class="subtitle">Get in touch with our team</p>
