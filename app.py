@@ -1,6 +1,8 @@
 # File: app.py
 # To run: uvicorn app:app --reload
 
+from xmlrpc import client
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates  
@@ -11,6 +13,8 @@ import sys
 from google import genai #pip install google-genai
 import time
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Handle token file gracefully
 try:
@@ -140,9 +144,37 @@ async def summarize_document(data: dict):
     except Exception as e:
         return {"response": f"Error: {str(e)}"}
     
+from pydantic import BaseModel
 
-    
-    
+class TTSRequest(BaseModel):
+    prompt: str
+
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from elevenlabs.client import ElevenLabs
+import io
+import os
+
+class TTSRequest(BaseModel):
+    prompt: str
+
+eleven_client = ElevenLabs(api_key=os.getenv("elevenlabs_key"))
+
+@app.post("/api/tts")
+async def speak_text(request: TTSRequest):
+
+    audio_generator = eleven_client.text_to_speech.convert(
+        voice_id="21m00Tcm4TlvDq8ikWAM",
+        model_id="eleven_multilingual_v2",
+        text=request.prompt
+    )
+
+    audio_bytes = b"".join(audio_generator)
+
+    return StreamingResponse(
+        io.BytesIO(audio_bytes),
+        media_type="audio/mpeg"
+    )
     
     
 #for text input only
@@ -150,7 +182,7 @@ def text_gemini(input=None):
     if not key:
         return "AI service not configured."
     api_key = key
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(api_key=os.getenv("gemini_key"))
     while True:
         try:
             response = client.models.generate_content(model='gemini-2.0-flash-lite', contents=f"{input}. Keep your response concise enough that it can be quickly read in one to two minutes.")
@@ -166,7 +198,7 @@ def text_gemini(input=None):
 #for local files uplodading; file argument should be filepath. To add extra file capacity, add file4, file5, etc
 def upload_gemini(input=None, file1=None, file2=None, file3=None):
     api_key = key
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(api_key=os.getenv("gemini_key"))
     contents = []
     if input:
         contents.append(input)
