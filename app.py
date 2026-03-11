@@ -17,6 +17,11 @@ import time
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel
+from elevenlabs.client import ElevenLabs
+import io
+import os
 
 # Handle token file gracefully
 try:
@@ -151,11 +156,7 @@ from pydantic import BaseModel
 class TTSRequest(BaseModel):
     prompt: str
 
-from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
-from elevenlabs.client import ElevenLabs
-import io
-import os
+
 
 class TTSRequest(BaseModel):
     prompt: str
