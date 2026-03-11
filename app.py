@@ -1,5 +1,7 @@
 # File: app.py
 # To run: uvicorn app:app --reload
+# If you have any issues and need to see what python libraries you have installed run:
+# python -m pip list
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
