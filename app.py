@@ -164,7 +164,7 @@ eleven_client = ElevenLabs(api_key=os.getenv("elevenlabs_key"))
 async def speak_text(request: TTSRequest):
 
     audio_generator = eleven_client.text_to_speech.convert(
-        voice_id="21m00Tcm4TlvDq8ikWAM",
+        voice_id="Bj9UqZbhQsanLzgalpEG",
         model_id="eleven_multilingual_v2",
         text=request.prompt
     )
