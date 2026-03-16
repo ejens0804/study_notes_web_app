@@ -25,23 +25,12 @@
     </ul>
 </div>
 
-<div class="info-section">
-    <h3>How It Works</h3>
-    <p>Our Text2Speech tool uses advanced AI technology to convert your written text into natural-sounding speech. Simply paste your study materials, notes, or any text you'd like to hear, and let our system read it aloud for you.</p>
-    <p>Perfect for auditory learners, multitasking while studying, or making your learning materials accessible anywhere!</p>
-</div>
-
 <div class="output" id="speechOutput" style="display: none;">
     <h3>Audio Player</h3>
     <audio id="audioPlayer" controls style="width: 100%;"></audio>
 </div>
 
-<div class="button-group" style="margin-top: 30px;">
-    <button onclick="window.location.href='/'">Back to Home</button>
-    <button onclick="window.location.href='/api-demo'">Try Text2Flashcards</button>
-    <button onclick="window.location.href='/docx-summary'">Docx Summary</button>
-    <button onclick="window.location.href='/contact'">Contact Us</button>
-</div>
+
 {% endblock %}
 {% block extra_js %}
 <script>
