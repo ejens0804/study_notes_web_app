@@ -5,7 +5,8 @@
 
 from xmlrpc import client
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile, File
+from docx import Document # pip install python-docx
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates  
 from fastapi.staticfiles import StaticFiles
@@ -21,15 +22,9 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from elevenlabs.client import ElevenLabs
 import io
-import os
 
 # Handle token file gracefully
-try:
-    with open('token.txt', 'r') as file:
-        key = file.read().strip()
-except FileNotFoundError:
-    key = None
-    print("Warning: token.txt not found. AI features will not work.")
+key = os.getenv("gemini_key")
 
 app = FastAPI()
 
@@ -116,6 +111,37 @@ async def submit_contact(data: dict):
         "message": f"Thank you {data.get('name')}! We received your message.",
         "received_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
+    
+@app.post("/api/upload-summarize")
+async def upload_and_summarize(file: UploadFile = File(...)):
+    # Validate file type
+    if not file.filename.endswith(('.docx', '.doc', '.txt')):
+        return {"response": "Unsupported file type. Please upload a .docx or .txt file."}
+    
+    try:
+        contents = await file.read()
+        
+        if file.filename.endswith('.txt'):
+            text = contents.decode('utf-8')
+        elif file.filename.endswith('.docx'):
+            doc = Document(io.BytesIO(contents))
+            text = '\n'.join([para.text for para in doc.paragraphs if para.text.strip()])
+        else:
+            return {"response": "Unsupported format."}
+        
+        if not text.strip():
+            return {"response": "The document appears to be empty."}
+        
+        if not key:
+            return {"response": "AI service not configured. Please add your API key to token.txt."}
+        
+        summary_prompt = f"Please provide a concise summary of the following text, highlighting the main points and key information:\n\n{text}"
+        summary = text_gemini(summary_prompt)
+        return {"summary": summary, "extracted_length": len(text)}
+    
+    except Exception as e:
+        return {"response": f"Error processing file: {str(e)}"}
+    
     
 @app.post("/api/ai-query")
 async def ai_query(data: dict):

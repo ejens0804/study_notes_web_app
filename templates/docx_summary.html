@@ -92,13 +92,38 @@
 async function uploadDocument() {
     const fileInput = document.getElementById('docxFile');
     const file = fileInput.files[0];
+    const outputDiv = document.getElementById('summaryOutput');
+    const resultDiv = document.getElementById('summaryResult');
     
     if (!file) {
         alert('Please select a file to upload.');
         return;
     }
     
-    alert('File upload feature coming soon! For now, please use the text paste option below.');
+    outputDiv.style.display = 'block';
+    resultDiv.textContent = 'Uploading and summarizing...';
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await fetch('/api/upload-summarize', {
+            method: 'POST',
+            body: formData  // no Content-Type header — browser sets it with boundary
+        });
+        
+        const data = await response.json();
+        
+        if (data.summary) {
+            resultDiv.textContent = data.summary;
+        } else if (data.response) {
+            resultDiv.textContent = data.response;
+        } else {
+            resultDiv.textContent = 'Unable to generate summary.';
+        }
+    } catch (error) {
+        resultDiv.textContent = 'Error: ' + error.message;
+    }
 }
 
 async function summarizeText() {
