@@ -1,4 +1,4 @@
-<!-- File: templates/about.html -->
+<!-- File: templates/text2speech.html -->
 {% extends "base.html" %}
 
 {% block title %}Text2Speech - FastAPI App{% endblock %}
@@ -45,42 +45,45 @@
 {% endblock %}
 {% block extra_js %}
 <script>
-function convertToSpeech() {
-    const text = document.getElementById('speechInput').value;
-    
+async function convertToSpeech() {
+
+    const text = document.getElementById("speechInput").value;
+
     if (!text.trim()) {
-        alert('Please enter some text to convert.');
+        alert("Please enter some text.");
         return;
     }
-    
-    // Check if browser supports speech synthesis
-    if ('speechSynthesis' in window) {
-        // Cancel any ongoing speech
-        window.speechSynthesis.cancel();
-        
-        // Create a new speech synthesis utterance
-        const utterance = new SpeechSynthesisUtterance(text);
-        
-        // Optional: Configure voice settings
-        utterance.rate = 1;    // Speed (0.1 to 10)
-        utterance.pitch = 1;   // Pitch (0 to 2)
-        utterance.volume = 1;  // Volume (0 to 1)
-        
-        // Speak the text
-        window.speechSynthesis.speak(utterance);
-        
-        // Show feedback
-        alert('Playing speech! Use browser controls to pause/resume.');
-    } else {
-        alert('Sorry, your browser does not support text-to-speech.');
+
+    try {
+
+        const response = await fetch("/api/tts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                prompt: text
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("TTS request failed");
+        }
+
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        const player = document.getElementById("audioPlayer");
+        player.src = audioUrl;
+
+        document.getElementById("speechOutput").style.display = "block";
+
+        player.play();
+
+    } catch (error) {
+        console.error(error);
+        alert("Error generating speech.");
     }
 }
-
-// Optional: Stop speech when leaving the page
-window.addEventListener('beforeunload', () => {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-    }
-});
 </script>
 {% endblock %}

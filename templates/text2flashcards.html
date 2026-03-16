@@ -45,8 +45,8 @@
 {% endblock %}
 
 {% block content %}
-<h1>Text to Speech</h1>
-<p class="subtitle">Convert text to speech</p>
+<h1>Text to Flashcards</h1>
+<p class="subtitle">Convert text to flashcards</p>
 
 <div class="card-grid">
     <div class="card">
@@ -59,18 +59,12 @@
     </div>
 </div>
 
-<div class="button-group">
-    <button onclick="fetchData('/api/time')">Get Server Time</button>
-    <button onclick="fetchData('/api/random')">Get Random Number</button>
-    <button onclick="fetchData('/api/status')">Check Status</button>
-    <button onclick="fetchData('/api/greet/World')">Say Hello</button>
-</div>
 
 <div class="ai-query-section">
     <h3>Ask the AI</h3>
-    <textarea id="aiInput" rows="4" placeholder="Type your question here..."></textarea>
+    <textarea id="aiInput" rows="4" placeholder="Type your info..."></textarea>
     <br>
-    <button onclick="sendAIQuery()">Ask AI</button>
+    <button onclick="sendAIQuery()">Convert to flashcards</button>
 </div>
 
 <div class="output" id="output">
@@ -92,14 +86,25 @@
 
 <script>
 async function sendAIQuery() {
-    const input = document.getElementById("aiInput").value;
+    const userInput = document.getElementById("aiInput").value;
     const output = document.getElementById("result");
     const loading = document.getElementById("loading");
 
-    if (!input.trim()) {
+    if (!userInput.trim()) {
         output.textContent = "Please enter a question.";
         return;
     }
+
+    // append instructions
+    const finalPrompt =
+    `Convert the following text into study flashcards.
+    Return each flashcard as:
+
+    Q: question
+    A: answer
+
+    Text:
+    ${userInput}`;
 
     loading.style.display = "block";
     output.textContent = "";
@@ -110,7 +115,7 @@ async function sendAIQuery() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ prompt: input })
+            body: JSON.stringify({ prompt: finalPrompt })
         });
 
         const data = await response.json();
