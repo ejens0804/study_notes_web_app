@@ -14,7 +14,7 @@ body {
 }
 
 .navbar {
-    background: white;
+    background: #2c3e50;
     border-radius: 4px;
     padding: 15px 30px;
     margin-bottom: 20px;
@@ -24,11 +24,10 @@ body {
     align-items: center;
     max-width: 900px;
     margin: 0 auto 20px auto;
-    border: 1px solid #e1e8ed;
 }
 
 .navbar a {
-    color: #2c3e50;
+    color: #ecf0f1;
     text-decoration: none;
     padding: 8px 16px;
     border-radius: 3px;
@@ -37,11 +36,11 @@ body {
 }
 
 .navbar a:hover {
-    background: #f5f7fa;
+    background: darkblue;
 }
 
 .navbar a.active {
-    background: #3498db;
+    background: darkblue;
     color: white;
 }
 
@@ -130,7 +129,7 @@ button {
 }
 
 button:hover {
-    background: #2980b9;
+    background: darkblue;
 }
 
 button:active {
@@ -159,7 +158,7 @@ button:active {
 
 .loading {
     display: none;
-    color: #3498db;
+    color: darkblue;
     font-style: italic;
 }
 
@@ -195,7 +194,7 @@ button:active {
     padding: 20px;
     border-radius: 4px;
     margin-bottom: 20px;
-    border-left: 4px solid #3498db;
+    border-left: 4px solid darkblue;
 }
 
 .info-section h3 {
