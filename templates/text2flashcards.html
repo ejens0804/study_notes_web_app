@@ -13,6 +13,18 @@
     h1 {
         color: #2e86de;
     }
+
+    .subtitle {
+        color: #54a0ff;
+    }
+
+    .info-section h3 {
+        color: #2e86de;
+    }
+
+    .info-section {
+        border-left: 4px solid #54a0ff;
+    }
     
     .card {
         background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
@@ -30,12 +42,28 @@
         background: #2475c7;
     }
     
-    .navbar a:hover {
+    .navbar {
         background: #e6f2ff;
+    }
+
+    .navbar a {
+        color: #2e86de;
+    }
+
+    .navbar a:hover {
+        background: #d0e8ff;
     }
     
     .output h3 {
         color: #2e86de;
+    }
+
+    .ai-query-section h3 {
+        color: #2e86de;
+    }
+
+    .info-section p {
+        color: #1a5fa8;
     }
     
     .ai-query-section textarea {
@@ -55,7 +83,7 @@
 
 <div class="ai-query-section">
     <h3>Ask the AI</h3>
-    <textarea id="aiInput" rows="4" placeholder="Type your info..."></textarea>
+    <textarea id="aiInput" rows="4" placeholder="Type what you want to convert into flashcards..."></textarea>
     <br>
     <button onclick="sendAIQuery()">Convert to flashcards</button>
 </div>
@@ -63,7 +91,7 @@
 <div class="output" id="output">
     <h3>Output</h3>
     <p class="loading" id="loading">Loading...</p>
-    <pre id="result">Click a button to see the API response...</pre>
+    <pre id="result">Click to see what the generated flashcards</pre>
 </div>
 
 
@@ -109,7 +137,7 @@ async function sendAIQuery() {
         const data = await response.json();
         output.textContent = data.response;
     } catch (error) {
-        output.textContent = "Error contacting AI.";
+        output.textContent = "Error with contacting AI.";
     }
 
     loading.style.display = "none";

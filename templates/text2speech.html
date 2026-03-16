@@ -3,6 +3,55 @@
 
 {% block title %}Text2Speech - FastAPI App{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Lavender Aesthetic for Text2Speech Page */
+    body {
+        background: linear-gradient(135deg, #c9b8e8 0%, #e8d5f5 100%);
+    }
+
+    h1 {
+        color: #7c5cbf;
+    }
+
+    .subtitle {
+        color: #9b7fd4;
+    }
+
+    button {
+        background: #7c5cbf;
+    }
+
+    button:hover {
+        background: #6a4dab;
+    }
+
+    .info-section {
+        border-left: 4px solid #9b7fd4;
+    }
+
+    .info-section h3 {
+        color: #7c5cbf;
+    }
+
+    .output h3 {
+        color: #7c5cbf;
+    }
+
+    .navbar {
+        background: #f0e8ff;
+    }
+
+    .navbar a {
+        color: #7c5cbf;
+    }
+
+    .navbar a:hover {
+        background: #e6d9ff;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h1>Text2Speech</h1>
 <p class="subtitle">Convert text to natural-sounding speech</p>
@@ -11,18 +60,6 @@
     <h3>Enter Your Text</h3>
     <textarea id="speechInput" rows="6" placeholder="Type or paste your text here..." style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
     <button onclick="convertToSpeech()" style="margin-top: 10px;">Convert to Speech</button>
-</div>
-
-<div class="info-section">
-    <h3>Key Features</h3>
-    <ul class="feature-list">
-        <li>Natural-sounding AI voices</li>
-        <li>Fast conversion process</li>
-        <li>Support for multiple languages</li>
-        <li>Adjustable speech rate and pitch</li>
-        <li>Perfect for studying on the go</li>
-        <li>Works with any text content</li>
-    </ul>
 </div>
 
 <div class="output" id="speechOutput" style="display: none;">
