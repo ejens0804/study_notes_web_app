@@ -200,6 +200,44 @@ async def ai_query(data: dict):
         return {"response": f"Error: {e}"}
 
 
+SUMMARY_PROMPT_TEMPLATE = (
+    "Analyze the following text and respond with EXACTLY this format "
+    "(no markdown, no extra text):\n\n"
+    "KEY_POINTS:\n"
+    "- first key point\n"
+    "- second key point\n"
+    "- (3-6 key points total)\n\n"
+    "SUMMARY:\n"
+    "A concise paragraph summarizing the full text.\n\n"
+    "---\nText to analyze:\n\n{text}"
+)
+
+
+def parse_structured_summary(raw: str) -> dict:
+    """Parse the AI response into key_points list and summary string."""
+    key_points = []
+    summary = ""
+    section = None
+    for line in raw.splitlines():
+        stripped = line.strip()
+        if stripped.upper().startswith("KEY_POINTS") or stripped.upper().startswith("KEY POINTS"):
+            section = "kp"
+            continue
+        elif stripped.upper().startswith("SUMMARY"):
+            section = "summary"
+            continue
+        if section == "kp" and stripped.startswith("- "):
+            key_points.append(stripped[2:].strip())
+        elif section == "kp" and stripped.startswith("* "):
+            key_points.append(stripped[2:].strip())
+        elif section == "summary" and stripped:
+            summary += (" " if summary else "") + stripped
+    # Fallback if parsing fails — return raw text as summary
+    if not summary and not key_points:
+        return {"key_points": [], "summary": raw}
+    return {"key_points": key_points, "summary": summary}
+
+
 @app.post("/api/summarize")
 async def summarize_text(data: dict):
     text = data.get("text")
@@ -208,11 +246,9 @@ async def summarize_text(data: dict):
     if not GEMINI_KEY:
         return {"response": "AI service not configured. Please add your API key to .env."}
     try:
-        summary_prompt = (
-            "Please provide a concise summary of the following text, "
-            f"highlighting the main points and key information:\n\n{text}"
-        )
-        return {"summary": text_gemini(summary_prompt)}
+        prompt = SUMMARY_PROMPT_TEMPLATE.format(text=text)
+        raw = text_gemini(prompt)
+        return parse_structured_summary(raw)
     except Exception as e:
         return {"response": f"Error: {e}"}
 
@@ -232,14 +268,34 @@ async def upload_and_summarize(file: UploadFile = File(...)):
         if not GEMINI_KEY:
             return {"response": "AI service not configured. Please add your API key to .env."}
 
-        summary_prompt = (
-            "Please provide a concise summary of the following text, "
-            f"highlighting the main points and key information:\n\n{text}"
-        )
-        return {"summary": text_gemini(summary_prompt), "extracted_length": len(text)}
+        prompt = SUMMARY_PROMPT_TEMPLATE.format(text=text)
+        raw = text_gemini(prompt)
+        result = parse_structured_summary(raw)
+        result["extracted_length"] = len(text)
+        return result
 
     except Exception as e:
         return {"response": f"Error processing file: {e}"}
+
+
+@app.post("/api/extract-text")
+async def extract_text_endpoint(file: UploadFile = File(...)):
+    """Extract raw text from an uploaded file without summarizing."""
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in SUPPORTED_EXTENSIONS:
+        return {"error": f"Unsupported file type '{ext}'. Please upload a .txt, .docx, or .pdf file."}
+
+    try:
+        contents = await file.read()
+        text = extract_text_from_upload(file.filename, contents)
+
+        if not text.strip():
+            return {"error": "The document appears to be empty or contains only images/scanned content."}
+
+        return {"text": text, "filename": file.filename, "length": len(text)}
+
+    except Exception as e:
+        return {"error": f"Error processing file: {e}"}
 
 
 class TTSRequest(BaseModel):

@@ -25,7 +25,6 @@ async function submitContact() {
         contactOutput.style.display = 'block';
         contactResult.textContent = JSON.stringify(data, null, 2);
         
-
         // Clear form
         document.getElementById('name').value = '';
         document.getElementById('email').value = '';

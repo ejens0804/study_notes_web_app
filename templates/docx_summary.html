@@ -4,79 +4,279 @@
 {% block title %}Document Summary - FastAPI App{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-    /* Yellow Aesthetic for Document Summary Page */
     body {
         background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+        font-family: 'DM Sans', sans-serif;
     }
-    
+
+    .container {
+        background: #fffdf8;
+    }
+
     h1 {
-        color: #c47a15;
+        font-family: 'DM Serif Display', serif;
+        color: #4a2c0a;
+        font-size: 2.4em;
+        letter-spacing: -0.02em;
     }
 
     .subtitle {
-        color: #d4891e;
-    }
-
-    .info-section h3 {
-        color: #c47a15;
+        color: #9a6c3b;
+        font-weight: 400;
     }
 
     .info-section {
-        border-left: 4px solid #f7b733;
+        background: #fff7ed;
+        border-left: 4px solid #e8952e;
+        border-radius: 2px 8px 8px 2px;
     }
-    
-    .card {
-        background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
+
+    .info-section h3 {
+        color: #6b3a10;
+        font-weight: 600;
+        font-size: 1.05em;
+        margin-bottom: 12px;
     }
-    
-    .card:hover {
-        box-shadow: 0 10px 25px rgba(247, 183, 51, 0.4);
-    }
-    
+
     button {
-        background: #f7b733;
-        color: #333;
+        background: #e8952e;
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 11px 22px;
+        transition: background 0.2s, transform 0.1s;
     }
-    
+
     button:hover {
-        background: #e6a625;
+        background: #c97a1a;
     }
-    
+
+    button:active {
+        transform: scale(0.97);
+    }
+
     .navbar {
-        background: #fff8e7;
+        background: #fffdf8;
     }
 
     .navbar a {
-        color: #c47a15;
+        color: #6b3a10;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
     }
 
     .navbar a:hover {
-        background: #fff0cc;
-    }
-    
-    .output h3 {
-        color: #f7b733;
-    }
-    
-    #summaryResult {
-        background: #fff8e7;
-        border-left: 4px solid #f7b733;
+        background: #fff0d6;
     }
 
+    .navbar a.active {
+        background: #e8952e;
+        color: #fff;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+        border: 2px dashed #dbb87a;
+        border-radius: 10px;
+        padding: 28px 20px;
+        text-align: center;
+        transition: border-color 0.2s, background 0.2s;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+        border-color: #e8952e;
+        background: #fff4e0;
+    }
+
+    .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .upload-icon { font-size: 2em; margin-bottom: 6px; }
+    .upload-label { color: #6b3a10; font-weight: 500; }
+    .upload-hint { color: #a07d52; font-size: 0.85em; margin-top: 4px; }
+
     .supported-types {
-        display: inline-flex;
-        gap: 8px;
-        margin-top: 8px;
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin-top: 10px;
     }
 
     .supported-types span {
-        background: #fff0cc;
-        color: #c47a15;
-        padding: 3px 10px;
-        border-radius: 3px;
-        font-size: 0.85em;
+        background: #fce8c7;
+        color: #8a5a1e;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.78em;
         font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+
+    /* Textarea */
+    #docxInput {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 0.95em;
+        font-family: 'DM Sans', sans-serif;
+        border: 2px solid #e6d5b8;
+        border-radius: 8px;
+        background: #fff;
+        resize: vertical;
+        transition: border-color 0.2s;
+    }
+
+    #docxInput:focus {
+        border-color: #e8952e;
+        outline: none;
+    }
+
+    /* Summary output card */
+    .summary-card {
+        display: none;
+        margin-top: 28px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(74, 44, 10, 0.10);
+        overflow: hidden;
+        animation: cardIn 0.4s ease-out;
+    }
+
+    @keyframes cardIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .summary-card-header {
+        background: linear-gradient(135deg, #f7b733, #f0a020);
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .summary-card-header h3 {
+        color: #4a2c0a;
+        font-family: 'DM Serif Display', serif;
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    .copy-btn {
+        background: rgba(255,255,255,0.85);
+        color: #6b3a10;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 0.82em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .copy-btn:hover { background: #fff; }
+
+    .copy-btn.copied {
+        background: #d4edda;
+        color: #276738;
+    }
+
+    .summary-card-body { padding: 24px; }
+
+    /* Key points */
+    .key-points {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0e6d3;
+    }
+
+    .section-label {
+        font-size: 0.72em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #b07d3a;
+        margin-bottom: 12px;
+    }
+
+    .key-points ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .key-points li {
+        padding: 8px 0 8px 24px;
+        position: relative;
+        color: #4a3520;
+        font-size: 0.95em;
+        line-height: 1.55;
+    }
+
+    .key-points li::before {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 15px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #f0a020;
+    }
+
+    .full-summary-text {
+        color: #3d2b17;
+        font-size: 0.95em;
+        line-height: 1.7;
+    }
+
+    .meta-badge {
+        display: inline-block;
+        margin-top: 16px;
+        font-size: 0.78em;
+        color: #9a7a4e;
+        background: #fdf3e1;
+        padding: 4px 12px;
+        border-radius: 20px;
+    }
+
+    /* Loading state */
+    .summary-loading {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 28px;
+    }
+
+    .loading-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid #f0e0c0;
+        border-top: 3px solid #e8952e;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 14px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+        color: #9a6c3b;
+        font-weight: 500;
+        font-size: 0.95em;
     }
 </style>
 {% endblock %}
@@ -87,99 +287,159 @@
 
 <div class="info-section">
     <h3>Upload Your Document</h3>
-    <input type="file" id="docxFile" accept=".docx,.txt,.pdf" style="margin-bottom: 10px;">
-    <div class="supported-types">
-        <span>.pdf</span>
-        <span>.docx</span>
-        <span>.txt</span>
+    <div class="upload-zone" id="uploadZone">
+        <input type="file" id="docxFile" accept=".docx,.txt,.pdf" onchange="uploadDocument()">
+        <div class="upload-icon">&#128196;</div>
+        <div class="upload-label">Drop a file here or click to browse</div>
+        <div class="upload-hint">Upload triggers summarization automatically</div>
+        <div class="supported-types">
+            <span>.pdf</span>
+            <span>.docx</span>
+            <span>.txt</span>
+        </div>
     </div>
-    <br>
-    <button onclick="uploadDocument()" style="margin-top: 10px;">Upload &amp; Summarize</button>
 </div>
 
 <div class="info-section">
     <h3>Or Paste Text Directly</h3>
-    <textarea id="docxInput" rows="8" placeholder="Paste your document text here..." style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;"></textarea>
-    <button onclick="summarizeText()" style="margin-top: 10px;">Generate Summary</button>
+    <textarea id="docxInput" rows="6" placeholder="Paste your document text here..."></textarea>
+    <button onclick="summarizeText()" style="margin-top: 12px;">Generate Summary</button>
 </div>
 
-<div class="output" id="summaryOutput" style="display: none; margin-top: 20px;">
-    <h3>Summary Result</h3>
-    <div id="summaryResult" style="padding: 15px; background: #f5f5f5; border-radius: 4px; white-space: pre-wrap;"></div>
+<div class="summary-loading" id="summaryLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Analyzing your document...</div>
+</div>
+
+<div class="summary-card" id="summaryCard">
+    <div class="summary-card-header">
+        <h3>Summary</h3>
+        <button class="copy-btn" onclick="copySummary()" id="copyBtn">
+            <span id="copyIcon">&#128203;</span> <span id="copyLabel">Copy</span>
+        </button>
+    </div>
+    <div class="summary-card-body">
+        <div class="key-points" id="keyPointsSection" style="display:none;">
+            <div class="section-label">Key Takeaways</div>
+            <ul id="keyPointsList"></ul>
+        </div>
+        <div>
+            <div class="section-label">Full Summary</div>
+            <div class="full-summary-text" id="summaryText"></div>
+        </div>
+        <div class="meta-badge" id="metaBadge" style="display:none;"></div>
+    </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-async function uploadDocument() {
-    const fileInput = document.getElementById('docxFile');
-    const file = fileInput.files[0];
-    const outputDiv = document.getElementById('summaryOutput');
-    const resultDiv = document.getElementById('summaryResult');
-    
-    if (!file) {
-        alert('Please select a file to upload.');
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+zone.addEventListener('drop', () => zone.classList.remove('dragover'));
+
+function showLoading() {
+    document.getElementById('summaryLoading').style.display = 'block';
+    document.getElementById('summaryCard').style.display = 'none';
+}
+
+function renderSummary(data) {
+    document.getElementById('summaryLoading').style.display = 'none';
+    const card = document.getElementById('summaryCard');
+
+    if (data.response) {
+        document.getElementById('keyPointsSection').style.display = 'none';
+        document.getElementById('summaryText').textContent = data.response;
+        document.getElementById('metaBadge').style.display = 'none';
+        card.style.display = 'block';
         return;
     }
-    
-    outputDiv.style.display = 'block';
-    resultDiv.textContent = 'Uploading and summarizing...';
-    
+
+    // Key points
+    const kpSection = document.getElementById('keyPointsSection');
+    const kpList = document.getElementById('keyPointsList');
+    if (data.key_points && data.key_points.length > 0) {
+        kpList.innerHTML = '';
+        data.key_points.forEach(pt => {
+            const li = document.createElement('li');
+            li.textContent = pt;
+            kpList.appendChild(li);
+        });
+        kpSection.style.display = 'block';
+    } else {
+        kpSection.style.display = 'none';
+    }
+
+    document.getElementById('summaryText').textContent = data.summary || '';
+
+    const badge = document.getElementById('metaBadge');
+    if (data.extracted_length) {
+        badge.textContent = 'Analyzed ' + data.extracted_length.toLocaleString() + ' characters';
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    card.style.display = 'block';
+}
+
+async function uploadDocument() {
+    const file = document.getElementById('docxFile').files[0];
+    if (!file) return;
+    showLoading();
+
     const formData = new FormData();
     formData.append('file', file);
-    
+
     try {
-        const response = await fetch('/api/upload-summarize', {
-            method: 'POST',
-            body: formData
-        });
-        
-        const data = await response.json();
-        
-        if (data.summary) {
-            resultDiv.textContent = data.summary;
-        } else if (data.response) {
-            resultDiv.textContent = data.response;
-        } else {
-            resultDiv.textContent = 'Unable to generate summary.';
-        }
-    } catch (error) {
-        resultDiv.textContent = 'Error: ' + error.message;
+        const res = await fetch('/api/upload-summarize', { method: 'POST', body: formData });
+        renderSummary(await res.json());
+    } catch (err) {
+        renderSummary({ response: 'Error: ' + err.message });
     }
 }
 
 async function summarizeText() {
     const text = document.getElementById('docxInput').value;
-    const outputDiv = document.getElementById('summaryOutput');
-    const resultDiv = document.getElementById('summaryResult');
-    
-    if (!text.trim()) {
-        alert('Please enter some text to summarize.');
-        return;
-    }
-    
-    outputDiv.style.display = 'block';
-    resultDiv.textContent = 'Generating summary...';
-    
+    if (!text.trim()) { alert('Please enter some text to summarize.'); return; }
+    showLoading();
+
     try {
-        const response = await fetch('/api/summarize', {
+        const res = await fetch('/api/summarize', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: text })
+            body: JSON.stringify({ text })
         });
-        
-        const data = await response.json();
-        
-        if (data.summary) {
-            resultDiv.textContent = data.summary;
-        } else if (data.response) {
-            resultDiv.textContent = data.response;
-        } else {
-            resultDiv.textContent = 'Error: Unable to generate summary.';
-        }
-    } catch (error) {
-        resultDiv.textContent = 'Error: ' + error.message;
+        renderSummary(await res.json());
+    } catch (err) {
+        renderSummary({ response: 'Error: ' + err.message });
     }
+}
+
+function copySummary() {
+    const kpItems = document.querySelectorAll('#keyPointsList li');
+    let text = '';
+    if (kpItems.length > 0) {
+        text += 'KEY TAKEAWAYS:\n';
+        kpItems.forEach(li => { text += '\u2022 ' + li.textContent + '\n'; });
+        text += '\n';
+    }
+    text += 'SUMMARY:\n' + document.getElementById('summaryText').textContent;
+
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const label = document.getElementById('copyLabel');
+        const icon = document.getElementById('copyIcon');
+        btn.classList.add('copied');
+        label.textContent = 'Copied!';
+        icon.textContent = '\u2713';
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            label.textContent = 'Copy';
+            icon.textContent = '\uD83D\uDCCB';
+        }, 2000);
+    });
 }
 </script>
 {% endblock %}

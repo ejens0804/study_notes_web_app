@@ -4,137 +4,490 @@
 {% block title %}Text2Flashcards - FastAPI App{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
-    /* Blue Aesthetic for Text2Flashcards Page */
     body {
         background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
-    }
-    
-    h1 {
-        color: #2e86de;
+        font-family: 'DM Sans', sans-serif;
     }
 
-    .subtitle {
-        color: #54a0ff;
+    .container {
+        background: #f5f9ff;
+    }
+
+    h1 {
+        font-family: 'DM Serif Display', serif;
+        color: #1a3d6e;
+        letter-spacing: -0.02em;
+    }
+
+    .subtitle { color: #5a8ec7; }
+
+    .info-section {
+        background: #eaf2ff;
+        border-left: 4px solid #3d8fe8;
+        border-radius: 2px 8px 8px 2px;
     }
 
     .info-section h3 {
-        color: #2e86de;
+        color: #1a3d6e;
+        font-weight: 600;
+        font-size: 1.05em;
+        margin-bottom: 12px;
     }
 
-    .info-section {
-        border-left: 4px solid #54a0ff;
-    }
-    
-    .card {
-        background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
-    }
-    
-    .card:hover {
-        box-shadow: 0 10px 25px rgba(46, 134, 222, 0.4);
-    }
-    
+    .info-section p { color: #2a5c9e; }
+
     button {
-        background: #2e86de;
+        background: #3d8fe8;
+        color: #fff;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        border-radius: 6px;
+        transition: background 0.2s, transform 0.1s;
     }
-    
-    button:hover {
-        background: #2475c7;
-    }
-    
+
+    button:hover { background: #2a6fc0; }
+    button:active { transform: scale(0.97); }
+
     .navbar {
-        background: #e6f2ff;
+        background: #f5f9ff;
     }
 
     .navbar a {
-        color: #2e86de;
+        color: #1a3d6e;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 500;
     }
 
-    .navbar a:hover {
-        background: #d0e8ff;
+    .navbar a:hover { background: #e0edff; }
+
+    .navbar a.active {
+        background: #3d8fe8;
+        color: #fff;
     }
-    
-    .output h3 {
-        color: #2e86de;
+
+    /* Upload zone */
+    .upload-zone {
+        border: 2px dashed #a8c8f0;
+        border-radius: 10px;
+        padding: 24px 20px;
+        text-align: center;
+        transition: border-color 0.2s, background 0.2s;
+        cursor: pointer;
+        position: relative;
     }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+        border-color: #3d8fe8;
+        background: #dfeaff;
+    }
+
+    .upload-zone input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .upload-icon { font-size: 1.8em; margin-bottom: 4px; }
+    .upload-label { color: #1a3d6e; font-weight: 500; font-size: 0.95em; }
+    .upload-hint { color: #6a9ad0; font-size: 0.82em; margin-top: 3px; }
+
+    .supported-types {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .supported-types span {
+        background: #d0e2f7;
+        color: #2a5c9e;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.78em;
+        font-weight: 600;
+    }
+
+    /* Textarea */
+    .ai-query-section { margin-bottom: 20px; }
 
     .ai-query-section h3 {
-        color: #2e86de;
+        color: #1a3d6e;
+        font-weight: 600;
+        margin-bottom: 10px;
     }
 
-    .info-section p {
-        color: #1a5fa8;
-    }
-    
     .ai-query-section textarea {
-        border: 2px solid #54a0ff;
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 0.95em;
+        font-family: 'DM Sans', sans-serif;
+        border: 2px solid #b5d0f0;
+        border-radius: 8px;
+        background: #fff;
+        resize: vertical;
+        transition: border-color 0.2s;
     }
+
+    .ai-query-section textarea:focus {
+        border-color: #3d8fe8;
+        outline: none;
+    }
+
+    /* Loading */
+    .fc-loading {
+        display: none;
+        text-align: center;
+        padding: 36px 20px;
+        margin-top: 24px;
+    }
+
+    .fc-loading .loading-spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid #d0e2f7;
+        border-top: 3px solid #3d8fe8;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 14px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .fc-loading .loading-text {
+        color: #5a8ec7;
+        font-weight: 500;
+    }
+
+    /* Flashcard grid */
+    .fc-header {
+        display: none;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 28px;
+        margin-bottom: 16px;
+    }
+
+    .fc-header h3 {
+        color: #1a3d6e;
+        font-family: 'DM Serif Display', serif;
+        font-size: 1.25em;
+        margin: 0;
+    }
+
+    .fc-counter {
+        font-size: 0.85em;
+        color: #6a9ad0;
+        font-weight: 600;
+    }
+
+    .fc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    /* 3D flip card */
+    .fc-card {
+        perspective: 800px;
+        height: 200px;
+        cursor: pointer;
+    }
+
+    .fc-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.55s cubic-bezier(0.4, 0.0, 0.2, 1);
+        transform-style: preserve-3d;
+    }
+
+    .fc-card.flipped .fc-card-inner {
+        transform: rotateY(180deg);
+    }
+
+    .fc-face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        border-radius: 12px;
+        padding: 22px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+    }
+
+    .fc-front {
+        background: linear-gradient(145deg, #ffffff, #eef4ff);
+        border: 2px solid #c5daef;
+        box-shadow: 0 3px 12px rgba(26, 61, 110, 0.08);
+    }
+
+    .fc-back {
+        background: linear-gradient(145deg, #3d8fe8, #2a6fc0);
+        color: #fff;
+        transform: rotateY(180deg);
+        border: 2px solid #2a6fc0;
+        box-shadow: 0 3px 12px rgba(26, 61, 110, 0.15);
+    }
+
+    .fc-label {
+        font-size: 0.65em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 10px;
+        opacity: 0.6;
+    }
+
+    .fc-front .fc-label { color: #3d8fe8; }
+    .fc-back .fc-label { color: rgba(255,255,255,0.7); }
+
+    .fc-text {
+        font-size: 0.93em;
+        line-height: 1.55;
+    }
+
+    .fc-front .fc-text { color: #1a3d6e; }
+    .fc-back .fc-text { color: #fff; }
+
+    .fc-tap-hint {
+        font-size: 0.72em;
+        margin-top: auto;
+        padding-top: 8px;
+        opacity: 0.45;
+    }
+
+    /* Stagger entrance */
+    .fc-card {
+        animation: cardEnter 0.35s ease-out both;
+    }
+
+    @keyframes cardEnter {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Raw output fallback */
+    .output {
+        background: #eaf2ff;
+        border: 1px solid #c5daef;
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .output h3 { color: #1a3d6e; }
 </style>
 {% endblock %}
 
 {% block content %}
 <h1>Text to Flashcards</h1>
-<p class="subtitle">Convert text to flashcards</p>
+<p class="subtitle">Convert text to interactive study flashcards</p>
 
 <div class="info-section">
     <h3>How It Works</h3>
-    <p>Paste your notes or study material, and the AI will turn them into Q&amp;A flashcards you can use to review.</p>
+    <p>Paste your notes or upload a document, and the AI will turn them into Q&amp;A flashcards. Click any card to flip it and reveal the answer.</p>
+</div>
+
+<div class="info-section">
+    <h3>Upload a Document</h3>
+    <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fcFile" accept=".docx,.txt,.pdf" onchange="uploadAndConvert()">
+        <div class="upload-icon">&#128196;</div>
+        <div class="upload-label">Drop a file here or click to browse</div>
+        <div class="upload-hint">Text will be extracted and converted to flashcards automatically</div>
+        <div class="supported-types">
+            <span>.pdf</span>
+            <span>.docx</span>
+            <span>.txt</span>
+        </div>
+    </div>
 </div>
 
 <div class="ai-query-section">
-    <h3>Ask the AI</h3>
-    <textarea id="aiInput" rows="4" placeholder="Type what you want to convert into flashcards..."></textarea>
+    <h3>Or Paste Your Notes</h3>
+    <textarea id="aiInput" rows="4" placeholder="Type or paste your study material here..."></textarea>
     <br>
-    <button onclick="sendAIQuery()">Convert to flashcards</button>
+    <button onclick="sendAIQuery()" style="margin-top: 10px;">Convert to Flashcards</button>
 </div>
 
-<div class="output" id="output">
+<div class="fc-loading" id="fcLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Generating flashcards...</div>
+</div>
+
+<div class="fc-header" id="fcHeader">
+    <h3>Your Flashcards</h3>
+    <span class="fc-counter" id="fcCounter"></span>
+</div>
+<div class="fc-grid" id="fcGrid"></div>
+
+<!-- Fallback for non-parseable output -->
+<div class="output" id="rawOutput" style="display:none; margin-top: 24px;">
     <h3>Output</h3>
-    <p class="loading" id="loading">Loading...</p>
-    <pre id="result">Click to see what the generated flashcards</pre>
+    <pre id="rawResult" style="white-space: pre-wrap;"></pre>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', path='/js/api.js') }}"></script>
 <script>
-async function sendAIQuery() {
-    const userInput = document.getElementById("aiInput").value;
-    const output = document.getElementById("result");
-    const loading = document.getElementById("loading");
+// Drag feedback
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+zone.addEventListener('drop', () => zone.classList.remove('dragover'));
 
-    if (!userInput.trim()) {
-        output.textContent = "Please enter a question.";
-        return;
+function showFCLoading() {
+    document.getElementById('fcLoading').style.display = 'block';
+    document.getElementById('fcHeader').style.display = 'none';
+    document.getElementById('fcGrid').innerHTML = '';
+    document.getElementById('rawOutput').style.display = 'none';
+}
+
+function hideFCLoading() {
+    document.getElementById('fcLoading').style.display = 'none';
+}
+
+function parseFlashcards(text) {
+    const cards = [];
+    // Match Q:/A: pairs — handles multiline answers
+    const blocks = text.split(/\n(?=Q:)/i);
+    for (const block of blocks) {
+        const qMatch = block.match(/Q:\s*([\s\S]*?)(?=\nA:)/i);
+        const aMatch = block.match(/A:\s*([\s\S]*)/i);
+        if (qMatch && aMatch) {
+            const q = qMatch[1].trim();
+            const a = aMatch[1].trim().replace(/\n(?=Q:).*/is, '').trim();
+            if (q && a) cards.push({ q, a });
+        }
     }
+    return cards;
+}
 
+function renderFlashcards(cards) {
+    const grid = document.getElementById('fcGrid');
+    const header = document.getElementById('fcHeader');
+    const counter = document.getElementById('fcCounter');
+
+    grid.innerHTML = '';
+
+    if (cards.length === 0) return false;
+
+    header.style.display = 'flex';
+    counter.textContent = cards.length + ' card' + (cards.length !== 1 ? 's' : '');
+
+    cards.forEach((card, i) => {
+        const el = document.createElement('div');
+        el.className = 'fc-card';
+        el.style.animationDelay = (i * 0.06) + 's';
+        el.onclick = () => el.classList.toggle('flipped');
+        el.innerHTML = `
+            <div class="fc-card-inner">
+                <div class="fc-face fc-front">
+                    <div class="fc-label">Question</div>
+                    <div class="fc-text">${escapeHtml(card.q)}</div>
+                    <div class="fc-tap-hint">Click to reveal answer</div>
+                </div>
+                <div class="fc-face fc-back">
+                    <div class="fc-label">Answer</div>
+                    <div class="fc-text">${escapeHtml(card.a)}</div>
+                    <div class="fc-tap-hint">Click to see question</div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(el);
+    });
+
+    return true;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function showRawFallback(text) {
+    document.getElementById('rawOutput').style.display = 'block';
+    document.getElementById('rawResult').textContent = text;
+}
+
+async function convertText(text) {
     const finalPrompt =
-    `Convert the following text into study flashcards.
-    Return each flashcard as:
+        `Convert the following text into study flashcards.
+Return each flashcard as:
 
-    Q: question
-    A: answer
+Q: question
+A: answer
 
-    Text:
-    ${userInput}`;
+Do not include numbering or extra formatting. Just Q: and A: pairs separated by blank lines.
 
-    loading.style.display = "block";
-    output.textContent = "";
+Text:
+${text}`;
+
+    showFCLoading();
 
     try {
-        const response = await fetch("/api/ai-query", {
+        const res = await fetch("/api/ai-query", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: finalPrompt })
         });
 
-        const data = await response.json();
-        output.textContent = data.response;
-    } catch (error) {
-        output.textContent = "Error with contacting AI.";
-    }
+        const data = await res.json();
+        hideFCLoading();
 
-    loading.style.display = "none";
+        const responseText = data.response || '';
+        const cards = parseFlashcards(responseText);
+
+        if (!renderFlashcards(cards)) {
+            showRawFallback(responseText);
+        }
+    } catch (error) {
+        hideFCLoading();
+        showRawFallback("Error contacting AI: " + error.message);
+    }
+}
+
+async function sendAIQuery() {
+    const userInput = document.getElementById("aiInput").value;
+    if (!userInput.trim()) {
+        alert("Please enter some text.");
+        return;
+    }
+    convertText(userInput);
+}
+
+async function uploadAndConvert() {
+    const file = document.getElementById('fcFile').files[0];
+    if (!file) return;
+    showFCLoading();
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const res = await fetch('/api/extract-text', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.error) {
+            hideFCLoading();
+            showRawFallback(data.error);
+            return;
+        }
+
+        // Got raw text — now send it to flashcard conversion
+        convertText(data.text);
+    } catch (err) {
+        hideFCLoading();
+        showRawFallback('Error uploading file: ' + err.message);
+    }
 }
 </script>
 {% endblock %}
