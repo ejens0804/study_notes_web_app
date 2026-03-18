@@ -1,11 +1,11 @@
 <!-- File: templates/docx_summary.html -->
 {% extends "base.html" %}
 
-{% block title %}Docx Summary - FastAPI App{% endblock %}
+{% block title %}Document Summary - FastAPI App{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Yellow Aesthetic for Docx Summary Page */
+    /* Yellow Aesthetic for Document Summary Page */
     body {
         background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
     }
@@ -63,17 +63,38 @@
         background: #fff8e7;
         border-left: 4px solid #f7b733;
     }
+
+    .supported-types {
+        display: inline-flex;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .supported-types span {
+        background: #fff0cc;
+        color: #c47a15;
+        padding: 3px 10px;
+        border-radius: 3px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<h1>Docx Summary</h1>
+<h1>Document Summary</h1>
 <p class="subtitle">Generate intelligent summaries from your documents</p>
 
 <div class="info-section">
     <h3>Upload Your Document</h3>
-    <input type="file" id="docxFile" accept=".docx,.doc,.txt,.pdf" style="margin-bottom: 10px;">
-    <button onclick="uploadDocument()" style="margin-top: 10px;">Upload & Summarize</button>
+    <input type="file" id="docxFile" accept=".docx,.txt,.pdf" style="margin-bottom: 10px;">
+    <div class="supported-types">
+        <span>.pdf</span>
+        <span>.docx</span>
+        <span>.txt</span>
+    </div>
+    <br>
+    <button onclick="uploadDocument()" style="margin-top: 10px;">Upload &amp; Summarize</button>
 </div>
 
 <div class="info-section">
@@ -86,8 +107,6 @@
     <h3>Summary Result</h3>
     <div id="summaryResult" style="padding: 15px; background: #f5f5f5; border-radius: 4px; white-space: pre-wrap;"></div>
 </div>
-
-
 {% endblock %}
 
 {% block extra_js %}
@@ -112,7 +131,7 @@ async function uploadDocument() {
     try {
         const response = await fetch('/api/upload-summarize', {
             method: 'POST',
-            body: formData  // no Content-Type header — browser sets it with boundary
+            body: formData
         });
         
         const data = await response.json();
@@ -139,16 +158,13 @@ async function summarizeText() {
         return;
     }
     
-    // Show loading state
     outputDiv.style.display = 'block';
     resultDiv.textContent = 'Generating summary...';
     
     try {
         const response = await fetch('/api/summarize', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: text })
         });
         

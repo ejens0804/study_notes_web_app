@@ -66,13 +66,11 @@
     <h3>Audio Player</h3>
     <audio id="audioPlayer" controls style="width: 100%;"></audio>
 </div>
-
-
 {% endblock %}
+
 {% block extra_js %}
 <script>
 async function convertToSpeech() {
-
     const text = document.getElementById("speechInput").value;
 
     if (!text.trim()) {
@@ -81,31 +79,20 @@ async function convertToSpeech() {
     }
 
     try {
-
         const response = await fetch("/api/tts", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                prompt: text
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: text })
         });
 
-        if (!response.ok) {
-            throw new Error("TTS request failed");
-        }
+        if (!response.ok) throw new Error("TTS request failed");
 
         const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
-
         const player = document.getElementById("audioPlayer");
         player.src = audioUrl;
-
         document.getElementById("speechOutput").style.display = "block";
-
         player.play();
-
     } catch (error) {
         console.error(error);
         alert("Error generating speech.");

@@ -1,4 +1,4 @@
-<!-- File: templates/api_demo.html -->
+<!-- File: templates/text2flashcards.html -->
 {% extends "base.html" %}
 
 {% block title %}Text2Flashcards - FastAPI App{% endblock %}
@@ -93,13 +93,10 @@
     <p class="loading" id="loading">Loading...</p>
     <pre id="result">Click to see what the generated flashcards</pre>
 </div>
-
-
 {% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', path='/js/api.js') }}"></script>
-
 <script>
 async function sendAIQuery() {
     const userInput = document.getElementById("aiInput").value;
@@ -111,7 +108,6 @@ async function sendAIQuery() {
         return;
     }
 
-    // append instructions
     const finalPrompt =
     `Convert the following text into study flashcards.
     Return each flashcard as:
@@ -128,9 +124,7 @@ async function sendAIQuery() {
     try {
         const response = await fetch("/api/ai-query", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: finalPrompt })
         });
 
@@ -143,5 +137,4 @@ async function sendAIQuery() {
     loading.style.display = "none";
 }
 </script>
-
 {% endblock %}

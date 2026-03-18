@@ -16,9 +16,7 @@ async function submitContact() {
     try {
         const response = await fetch('/api/contact', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, message })
         });
         
@@ -27,6 +25,7 @@ async function submitContact() {
         contactOutput.style.display = 'block';
         contactResult.textContent = JSON.stringify(data, null, 2);
         
+
         // Clear form
         document.getElementById('name').value = '';
         document.getElementById('email').value = '';
