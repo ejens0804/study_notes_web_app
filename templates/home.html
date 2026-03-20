@@ -18,6 +18,14 @@
     h1 {
         color: #8b6541;
     }
+
+    .info-section h3 {
+        color: #8b6541;
+    }
+
+    .info-section {
+        border-left: 4px solid #c9a27b;
+    }
     
     .subtitle {
         color: #a07855;
@@ -60,6 +68,15 @@
     .output h3 {
         color: #8b6541;
     }
+
+    .info-section p {
+        color: #7a5535;
+    }
+
+    .feature-list li {
+        color: #7a5535;
+        border-bottom-color: #e5d5c0;
+    }
     
     .feature-list li a {
         color: #a07855 !important;
@@ -72,38 +89,33 @@
 {% endblock %}
 
 {% block content %}
-<h1>Welcome to --Unknown Name--</h1>
-<p class="subtitle">This is a site used to help users turn documents to flashcards for easy memorization, text to speech for better understanding, document focus pull, games and more</p>
+<h1>Welcome to SmartTools</h1>
+<p class="subtitle">A set of AI-powered tools designed to help students study more effectively, save time, and better understand their course material.</p>
 
 <div class="card-grid">
     <div class="card">
-        <h3>Don't have enough time to read?</h3>
-        <p>We Got U</p>
+        <h3>Short on time?</h3>
+        <p>We can help.</p>
     </div>
     <div class="card">
-        <h3>Don't have enough resources?</h3>
-        <p>We Got You</p>
+        <h3>Too much to read?</h3>
+        <p>We can summarize.</p>
     </div>
     <div class="card">
-        <h3>Need more motivation to learn?</h3>
-        <p>We Got You</p>
+        <h3>Need to review?</h3>
+        <p>We can quiz you.</p>
     </div>
 </div>
 
 <div class="info-section">
-    <h3>Quick Start</h3>
-    <p>Explore the different sections of this application:</p>
-    <div class="button-group" style="margin-top: 20px; margin-bottom: 20px;">
-        <button onclick="window.location.href='/api-demo'">Try Text2Flashcards</button>
-        <button onclick="window.location.href='/about'">Try Text2Speech</button>
-        <button onclick="window.location.href='/docx-summary'">Try Docx Summary</button>
-        <button onclick="window.location.href='/contact'">Contact Us</button>
-    </div>
+    <h3>What You Can Do Here</h3>
+    <p>Explore the tools available in this application:</p>
+
     <ul class="feature-list">
-        <li><a href="/api-demo" style="color: #007acc; text-decoration: none;">Text2Flashcards converter</a> - Turn your documents into interactive flashcards</li>
-        <li><a href="/about" style="color: #007acc; text-decoration: none;">Text2Speech converter</a> - Listen to your study materials with AI-powered narration</li>
-        <li><a href="/docx-summary" style="color: #007acc; text-decoration: none;">Docx Summary generator</a> - Get intelligent summaries of your documents</li>
-        <li><a href="/contact" style="color: #007acc; text-decoration: none;">Easy-to-use contact form</a> - Reach out to us with questions</li>
+        <li><a href="/api-demo" style="color: #a07855; text-decoration: none;">Text to Flashcards</a> — Paste your notes and generate study flashcards instantly</li>
+        <li><a href="/about" style="color: #a07855; text-decoration: none;">Text to Speech</a> — Have your study material read aloud using AI-powered narration</li>
+        <li><a href="/docx-summary" style="color: #a07855; text-decoration: none;">Document Summarizer</a> — Upload a PDF, DOCX, or TXT file and receive a clear, concise summary</li>
+        <li><a href="/contact" style="color: #a07855; text-decoration: none;">Contact</a> — Send us a message with any questions or feedback</li>
     </ul>
 </div>
 {% endblock %}
