@@ -1,82 +1,103 @@
-# FastAPI Multi-Page Application
+# SmartTools - AI-Powered Study Assistant
 
-## File Structure
+An AI-powered web application that helps students study more effectively. SmartTools converts notes and documents into flashcards, generates audio from text, and summarizes documents using Google Gemini and ElevenLabs APIs.
 
-```
-project/
-│
-├── app.py                      # Main FastAPI application
-│
-├── templates/                  # HTML templates
-│   ├── base.html              # Base template (inherited by all pages)
-│   ├── home.html              # Home page
-│   ├── api_demo.html          # API demo page
-│   ├── about.html             # About page
-│   └── contact.html           # Contact page
-│
-└── static/                     # Static files
-    ├── css/
-    │   └── style.css          # Main stylesheet
-    │
-    └── js/
-        ├── main.js            # Main JavaScript
-        ├── api.js             # API demo functionality
-        └── contact.js         # Contact form functionality
-```
+## Features
 
-## Setup Instructions
+- **Text to Flashcards** — Paste notes or upload a document to generate interactive Q&A flashcards with 3D flip animations
+- **Text to Speech** — Convert written text or uploaded documents into natural-sounding audio
+- **Document Summarizer** — Upload a PDF, DOCX, or TXT file and receive key takeaways and a concise summary
+- **AI Query** — Send custom prompts directly to Google Gemini for any question
 
-1. **Install dependencies:**
+## Instructions for Build and Use
+
+Steps to build and run the software:
+
+1. Clone the repository and navigate to the project folder
+2. (Recommended) Create and activate a virtual environment:
    ```bash
-   pip install fastapi uvicorn jinja2 python-multipart google-genai
+   python -m venv venv
+   source venv/bin/activate        # macOS/Linux
+   venv\Scripts\activate           # Windows
    ```
-
-2. **Create the directory structure:**
-   - Create `templates/` folder
-   - Create `static/css/` folder
-   - Create `static/js/` folder
-
-3. **Add all the files** as shown in the structure above
-
-4. **Set up AI features (optional):**
-   - Create a `token.txt` file in the root directory
-   - Add your Google Gemini API key to this file
-   - If you skip this step, the app will still run but AI features won't work
-   
-   Example:
+3. Install dependencies:
    ```bash
-   echo "YOUR_GOOGLE_GENAI_API_KEY" > token.txt
+   pip install fastapi uvicorn jinja2 python-docx pypdf pdfplumber google-genai elevenlabs python-dotenv
    ```
-
-5. **Run the application:**
+4. Create a `.env` file in the project root and add your API keys:
+   ```
+   gemini_key = YOUR_GOOGLE_GEMINI_API_KEY
+   elevenlabs_key = YOUR_ELEVENLABS_API_KEY
+   ```
+5. Start the server:
    ```bash
    uvicorn app:app --reload
    ```
+6. Open `http://localhost:8000` in your browser
 
-6. **Open your browser:**
-   Navigate to `http://127.0.0.1:8000`
+Instructions for using the software:
 
-## How It Works
+1. Navigate to the desired tool using the top navigation bar
+2. Either paste text directly into the input box or upload a `.txt`, `.pdf`, or `.docx` file
+3. Click the action button (e.g., "Generate Flashcards", "Summarize", "Convert to Speech")
+4. Results appear below — flashcards can be flipped by clicking them
 
-### Templates (Jinja2)
-- **base.html**: Contains the common structure (navbar, footer, CSS/JS links)
-- **Other templates**: Extend base.html and only define their unique content
-- Use `{% extends "base.html" %}` and `{% block content %}...{% endblock %}`
+## Development Environment
 
-### Static Files
-- **CSS**: Styling separated into `static/css/style.css`
-- **JS**: JavaScript separated by functionality in `static/js/`
-- Referenced using: `{{ url_for('static', path='/css/style.css') }}`
+To recreate the development environment, you need the following software and/or libraries with the specified versions:
 
-### Routes
-- Each page has its own route (/, /api-demo, /about, /contact)
-- FastAPI renders the appropriate template for each route
-- Templates receive data via the `templates.TemplateResponse()` method
+* Python 3.8+
+* fastapi
+* uvicorn
+* jinja2
+* python-docx
+* pypdf
+* pdfplumber
+* google-genai
+* elevenlabs
+* python-dotenv
 
-## Benefits of This Structure
+## API Keys
 
-✓ **Separation of Concerns**: HTML, CSS, and JS are in separate files
-✓ **Reusability**: Base template prevents code duplication
-✓ **Maintainability**: Easy to update styles or scripts globally
-✓ **Scalability**: Easy to add new pages
-✓ **Organization**: Clear file structure for larger projects
+| Service | Purpose | Where to get it |
+|---------|---------|----------------|
+| Google Gemini | Flashcard generation, summarization, AI queries | [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| ElevenLabs | Text-to-speech audio synthesis | [ElevenLabs Account Settings](https://elevenlabs.io/) |
+
+## Project Structure
+
+```
+study_notes_web_app/
+├── app.py                  # FastAPI application and all route handlers
+├── .env                    # API keys (not committed to git)
+├── templates/              # Jinja2 HTML templates
+│   ├── base.html           # Shared layout with navbar
+│   ├── home.html           # Landing page
+│   ├── text2flashcards.html
+│   ├── text2speech.html
+│   ├── docx_summary.html
+│   └── contact.html
+├── static/
+│   ├── css/style.css       # Global styles
+│   └── js/                 # Frontend scripts
+└── MailExperiment/
+    └── mail.py             # Experimental email script
+```
+
+## Useful Websites to Learn More
+
+I found these websites useful in developing this software:
+
+* [FastAPI Documentation](https://fastapi.tiangolo.com/)
+* [Google Gemini API Docs](https://ai.google.dev/gemini-api/docs)
+* [ElevenLabs API Docs](https://elevenlabs.io/docs)
+
+## Future Work
+
+The following items I plan to fix, improve, and/or add to this project in the future:
+
+* [ ] Add a login/account system to save flashcard sets
+* [ ] Support additional file types (e.g., `.pptx`, images with OCR)
+* [ ] Implement email delivery of summaries and flashcards via the contact/email module
+* [ ] Add a quiz mode that tracks scores across flashcard sessions
+* [ ] Deploy to a cloud platform (e.g., Railway, Render, or AWS)
